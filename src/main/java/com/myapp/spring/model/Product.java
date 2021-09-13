@@ -48,6 +48,10 @@ public class Product {
 		this.starRating = starRating;
 	}
 
+	public Product(int i, String string, int j) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Integer getProductId() {
 		return productId;
 	}

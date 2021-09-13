@@ -1,223 +1,166 @@
-
-
 package com.myapp.spring.model;
 
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 
+@Entity
+@Table(name="shoppingcart")
 public class ShoppingCart {
 
+	public static String ORDERED = "ordered";
 
+	public static String PENDING = "pending";
 
+	@Id
+	@Column(name = "id")
+	private String id;
 
-public static String ORDERED = "ordered";
+	@Column(name = "status")
+	public String status; // pending, ordered
 
-public static String PENDING = "pending";
+	@Column(name = "username")
+	public String userName;
 
+	@Column(name = "products")
+	public HashMap<Integer, Product> products;
 
+	@Column(name = "quantity")
+	public HashMap<Integer, Integer> productQuantities;
 
+	@Column(name = "last_modified")
+	public Date lastModified;
 
-@Id
-
-private String id;
-
-
-
-
-public String status; //pending, ordered
-
-
-
-
-public String userName;
-
-
-
-
-public HashMap<Integer, Product> products;
-
-
-
-
-public HashMap<Integer, Integer> productQuantities;
-
-
-
-
-
-
-public Date lastModified;
-
-
-
-
-
-
-public Date orderDate;
-
-
-
+	@Column(name = "ordered_date")
+	public Date orderDate;
 
 //total price
+	@Column(name = "price")
+	public int totalPrice = 0;
 
-public int totalPrice = 0;
+	public ShoppingCart() {
+	}
 
+	public ShoppingCart(String status, String userName,
 
+			HashMap<Integer, Product> products,
 
+			HashMap<Integer, Integer> productQuantities,
 
-public ShoppingCart(){}
+			Date orderDate, Date lastModified, int totalPrice) {
 
+		this.status = status;
 
+		this.userName = userName;
 
+		this.products = products;
 
-public ShoppingCart(String status, String userName,
+		this.productQuantities = productQuantities;
 
-HashMap<Integer, Product> products,
+		this.orderDate = orderDate;
 
-HashMap<Integer, Integer> productQuantities,
+		this.lastModified = lastModified;
 
-Date orderDate, Date lastModified, int totalPrice){
+		this.totalPrice = totalPrice;
 
-this.status = status;
+	}
 
-this.userName = userName;
+	public String getId() {
 
-this.products = products;
+		return this.id;
 
-this.productQuantities = productQuantities;
+	}
 
-this.orderDate = orderDate;
+	public Product getProductFromId(String productId) {
 
-this.lastModified = lastModified;
+		return this.products.get(productId);
 
-this.totalPrice = totalPrice;
+	}
 
-}
-
-
-
-
-public String getId(){
-
-return this.id;
-
-}
-
-
-
-
-public Product getProductFromId(String productId){
-
-return this.products.get(productId);
-
-}
-
-
-
-
-public void addProduct(Product product){
-
-
-
+	public void addProduct(Product product) {
 
 //Check if the product is in the HashMap
 
-Product fromCart = this.products.get(product.getProductId());
+		Product fromCart = this.products.get(product.getProductId());
 
+		if (fromCart == null) {
 
+			this.products.put(product.getProductId(), product);
 
+		}
 
-if(fromCart == null){
+	}
 
-this.products.put(product.getProductId(), product);
+	public void addProductQuantity(Product product) {
 
-}
+		Integer productId = product.getProductId();
 
+		if (this.productQuantities.containsKey(productId)) {
 
+			int quantity = this.productQuantities.get(productId);
 
+			quantity++;
 
-}
+			this.productQuantities.put(productId, quantity);
 
+		}
 
-
-
-public void addProductQuantity(Product product){
-
-Integer productId = product.getProductId();
-
-if(this.productQuantities.containsKey(productId)){
-
-int quantity = this.productQuantities.get(productId);
-
-quantity++;
-
-this.productQuantities.put(productId, quantity);
-
-}
-
-else {
+		else {
 
 // init the product quantities if key not found
 
-this.productQuantities.put(productId, 1);
+			this.productQuantities.put(productId, 1);
 
-}
+		}
 
-this.totalPrice += product.getPrice();
+		this.totalPrice += product.getPrice();
 
-}
+	}
 
+	public void removeProduct(Integer productId) {
 
+		if (this.products.containsKey(productId)) {
 
+			this.products.remove(productId);
 
-public void removeProduct(Integer productId){
+		}
 
-if(this.products.containsKey(productId)){
+	}
 
-this.products.remove(productId);
+	public void removeProductQuantity(Product product) {
 
-}
+		Integer productId = product.getProductId();
 
-}
+		if (this.productQuantities.containsKey(productId)) {
 
+			int quantity = this.productQuantities.get(productId);
 
-
-
-public void removeProductQuantity(Product product){
-
-
-
-
-Integer productId = product.getProductId();
-
-if(this.productQuantities.containsKey(productId)){
-
-int quantity = this.productQuantities.get(productId);
-
-quantity--;
+			quantity--;
 
 //remove datas from the HashMaps when quantity is too low
 
-if(quantity <1){
+			if (quantity < 1) {
 
-this.productQuantities.remove(productId);
+				this.productQuantities.remove(productId);
 
-this.removeProduct(productId);
+				this.removeProduct(productId);
 
-}
+			}
 
-else {
+			else {
 
-this.productQuantities.put(productId, quantity);
+				this.productQuantities.put(productId, quantity);
 
-}
+			}
 
-this.totalPrice -= product.getPrice();
-}
+			this.totalPrice -= product.getPrice();
+		}
 
-}
+	}
 
 }
