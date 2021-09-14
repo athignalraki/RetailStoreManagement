@@ -2,36 +2,56 @@ package com.myapp.spring.model;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+
+
 
 
 @Entity
 @Table(name="shoppingcart")
 public class ShoppingCart {
 
+	@Transient
 	public static String ORDERED = "ordered";
 
+	@Transient
 	public static String PENDING = "pending";
 
 	@Id
-	@Column(name = "id")
+	
 	private String id;
 
-	@Column(name = "status")
+	
 	public String status; // pending, ordered
 
-	@Column(name = "username")
+	//@NaturalId(mutable = false)
 	public String userName;
 
-	@Column(name = "products")
-	public HashMap<Integer, Product> products;
+	@ElementCollection
+	@MapKeyColumn(name="product_key")
+	@Column(name="product_value")
+	@CollectionTable(name="product_cart",joinColumns = @JoinColumn(name="id"))
+	public Map<Integer, Product> products;
 
-	@Column(name = "quantity")
-	public HashMap<Integer, Integer> productQuantities;
+
+	@ElementCollection
+	@MapKeyColumn(name="product_qnty")
+	@Column(name="product_value")
+	@CollectionTable(name="product_cart_qnty")
+
+	public Map<Integer, Integer> productQuantities;
 
 	@Column(name = "last_modified")
 	public Date lastModified;
@@ -48,9 +68,9 @@ public class ShoppingCart {
 
 	public ShoppingCart(String status, String userName,
 
-			HashMap<Integer, Product> products,
+			Map<Integer, Product> products,
 
-			HashMap<Integer, Integer> productQuantities,
+			Map<Integer, Integer> productQuantities,
 
 			Date orderDate, Date lastModified, int totalPrice) {
 
@@ -74,6 +94,85 @@ public class ShoppingCart {
 
 		return this.id;
 
+	}
+	
+	
+
+	public static String getORDERED() {
+		return ORDERED;
+	}
+
+	public static void setORDERED(String oRDERED) {
+		ORDERED = oRDERED;
+	}
+
+	public static String getPENDING() {
+		return PENDING;
+	}
+
+	public static void setPENDING(String pENDING) {
+		PENDING = pENDING;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	//@JsonAnyGetter
+	public Map<Integer, Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Map<Integer, Product> products) {
+		this.products = products;
+	}
+
+	public Map<Integer, Integer> getProductQuantities() {
+		return productQuantities;
+	}
+
+	public void setProductQuantities(Map<Integer, Integer> productQuantities) {
+		this.productQuantities = productQuantities;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
+	}
+
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	public int getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public Product getProductFromId(String productId) {

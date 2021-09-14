@@ -75,8 +75,10 @@ public class ShoppingCartRestController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	ResponseEntity<?> add(@RequestBody ShoppingCart input, UriComponentsBuilder ucBuilder) {
-		ShoppingCart result = this.shoppingCartRepository.save(new ShoppingCart(ShoppingCart.PENDING, input.userName,
-				input.products, input.productQuantities, input.orderDate, input.lastModified, input.totalPrice));
+		
+		
+		input.setPENDING(ShoppingCart.PENDING);
+		ShoppingCart result = this.shoppingCartRepository.save(input);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/cart/{id}").buildAndExpand(result.getId()).toUri());
