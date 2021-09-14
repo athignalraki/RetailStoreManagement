@@ -3,7 +3,7 @@ node {
 def mvnHome
 
 stage('Prepare') {
-github.com:athignalraki/RetailStoreManagement.git', branch: 'finalcode'
+git url:'git@github.com:athignalraki/RetailStoreManagement.git', branch: 'finalcode'
 
 mvnHome = tool 'mvn'
 
