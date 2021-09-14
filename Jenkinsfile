@@ -1,49 +1,48 @@
 node {
 
-def mvnHome
+	def mvnHome
 
-stage('Prepare') {
-git url:'git@github.com:athignalraki/RetailStoreManagement.git', branch: 'finalcode'
+	stage('Prepare') {
+		git url: 'git@github.com:athignalraki/RetailStoreManagement.git', branch: 'finalcode'
+		mvnHome = tool 'mvn'
 
-mvnHome = tool 'mvn'
+	}
 
-}
+	stage('Build') {
+	
+		if (isUnix()) {
+		
+			sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+	
+	} else {
+	
+		bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
+	
+		}
+	
+	}
 
-stage('Build') {
+	stage('Unit Test') {
 
-if (isUnix()) {
+		junit '**/target/surefire-reports/TEST-*.xml'
+		
+		archive 'target/*.jar'
 
-sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+	}
 
-} else {
+	stage('Integration Test') {
 
-bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
-
-}
-
-}
-
-stage('Unit Test') {
-
-junit '**/target/surefire-reports/TEST-*.xml'
-
-archive 'target/*.jar'
-
-}
-
-stage('Integration Test') {
-
-if (isUnix()) {
-
-sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean verify"
-
-} else {
-
-bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean verify/)
-
-}
-
-}
+		if (isUnix()) {
+	
+	sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean verify"
+	
+	} else {
+	
+	bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean verify/)
+	
+	}
+	
+	}
 
 
 stage('Deploy') {
