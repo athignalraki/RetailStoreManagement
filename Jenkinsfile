@@ -45,17 +45,9 @@ node {
 	}
 
 
-stage('Deploy') {
 
-sh 'curl -u admin:admin -T target/**.war "http://localhost:5050/manager/text/deploy?path=/retail&update=true"';
 
-}
 
-stage("Smoke Test"){
-
-sh 'curl --retry-delay 10 --retry 5 "http://localhost:5050/retail/api/v1/products"';
-
-}
 
 stage('Publish') {
       def server = Artifactory.server 'Artifactory'
