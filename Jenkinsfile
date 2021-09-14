@@ -45,7 +45,34 @@ node {
 	}
 
 
-
+	stage('Sonar') {
+      if (isUnix()) {
+         sh "'${mvnHome}/bin/mvn' sonar:sonar"
+      } else {
+         bat(/"${mvnHome}\bin\mvn" sonar:sonar/)
+      }
+   }
+   
+   
+   stage ('Build Docker Image') {
+           if (isUnix()) {
+         sh "'${mvnHome}/bin/mvn' k8s:build k8s:resource"
+      } else {
+         bat(/"${mvnHome}\bin\mvn" k8s:build k8s:resource/)
+      }
+                
+            
+        }
+		
+		stage ('Kubernetes Deploy') {
+           
+             if (isUnix()) {
+         sh "'${mvnHome}/bin/mvn' k8s:deploy"
+            }
+            else {
+         bat(/"${mvnHome}\bin\mvn" k8s:deploy/)
+      }
+        }
 
 
 
