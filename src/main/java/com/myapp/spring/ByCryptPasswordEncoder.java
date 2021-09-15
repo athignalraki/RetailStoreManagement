@@ -5,7 +5,7 @@ public class ByCryptPasswordEncoder {
 		
 		
 		 ByCryptPasswordEncoder passwordEncoder = new ByCryptPasswordEncoder();
-		    String password = "chaya";
+		    String password = "Harsha";
 		    String encodedPassword = passwordEncoder.encode(password);
 
 		    System.out.println();
@@ -19,7 +19,7 @@ public class ByCryptPasswordEncoder {
 
 	private String encode(String password) {
 		// TODO Auto-generated method stub
-		return null;
+		return password;
 	}
 
 	private boolean matches(String password, String encodedPassword) {
