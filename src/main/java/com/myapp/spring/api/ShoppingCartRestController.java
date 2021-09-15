@@ -3,8 +3,9 @@ package com.myapp.spring.api;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-//import java.util.Map;
 import java.util.Map.Entry;
+
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -21,15 +22,13 @@ import com.myapp.spring.model.Product;
 import com.myapp.spring.model.ShoppingCart;
 import com.myapp.spring.repository.ProductRepository;
 import com.myapp.spring.repository.ShoppingCartRepository;
-//import com.myapp.spring.api.ShoppingCartListNotFoundException;
-//import com.myapp.spring.api.ShoppingCartNotFoundException;
-//import com.myapp.spring.api.ProductNotFoundException;
 
 @RestController
 @RequestMapping("/shoppingcart")
-
 public class ShoppingCartRestController {
 
+	
+	
 	@Autowired
 	private ShoppingCartRepository shoppingCartRepository;
 	@Autowired
@@ -77,7 +76,7 @@ public class ShoppingCartRestController {
 	ResponseEntity<?> add(@RequestBody ShoppingCart input, UriComponentsBuilder ucBuilder) {
 		
 		
-		input.setPENDING(ShoppingCart.PENDING);
+		ShoppingCart.setPENDING(ShoppingCart.PENDING);
 		ShoppingCart result = this.shoppingCartRepository.save(input);
 
 		HttpHeaders headers = new HttpHeaders();
