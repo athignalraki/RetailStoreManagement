@@ -26,8 +26,8 @@ import com.myapp.spring.api.ShoppingCartNotFoundException;
 import com.myapp.spring.api.ProductNotFoundException;
 
 @RestController
-//@RequestMapping("/shoppingcart")
-@RequestMapping(value = "/shoppingcart", method = RequestMethod.GET)
+@RequestMapping("/shoppingcart")
+//@RequestMapping(value = "/shoppingcart", method = RequestMethod.GET)
 public class ShoppingCartRestController {
 
 	@Autowired
