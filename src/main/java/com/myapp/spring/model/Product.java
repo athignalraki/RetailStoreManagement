@@ -1,3 +1,4 @@
+//product.java
 package com.myapp.spring.model;
 
 import java.util.Objects;
