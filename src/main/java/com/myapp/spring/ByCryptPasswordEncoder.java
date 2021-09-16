@@ -13,6 +13,7 @@ public class ByCryptPasswordEncoder {
 		    System.out.println("Encoded Password is : " + encodedPassword);
 		    System.out.println();
 
+		    
 		    boolean isPasswordMatch = passwordEncoder.matches(password, encodedPassword);
 		  //  System.out.println("Password : " + password + "   isPasswordMatch    : " + isPasswordMatch);
 	}
